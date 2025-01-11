@@ -16,6 +16,20 @@ TELEGRAM_BOT_ID=
 TELEGRAM_CHAT_ID=
 FORCE_UPDATE=false
 
+if [ -n "$BASH_SOURCE" ]; then
+  workDir=$(
+    cd $(dirname "$BASH_SOURCE")
+    pwd
+  )
+else
+  workDir=$(
+    cd $(dirname $0)
+    pwd
+  )
+fi
+echo "workDir: $workDir"
+cd $workDir
+
 while getopts k:n:t:u:z:i:a:p:b:c:fr: opts; do
 	case ${opts} in
 		t) CLOUDFLARE_API_TOKEN=${OPTARG} ;;
@@ -91,7 +105,7 @@ else
 fi
 
 PUBLIC_IP=`curl $CURL_INTERFACE -s $IP_API`
-PUBLIC_IP_FILE=$HOME/.IP::$CLOUDFLARE_RECORD_TYPE::$CLOUDFLARE_RECORD_NAME.ddns
+PUBLIC_IP_FILE=$workDir/.IP::$CLOUDFLARE_RECORD_TYPE::$CLOUDFLARE_RECORD_NAME.ddns
 
 if [ -f $PUBLIC_IP_FILE ]; then
 	OLD_PUBLIC_IP=`cat $PUBLIC_IP_FILE`
@@ -105,7 +119,7 @@ if [ "$PUBLIC_IP" = "$OLD_PUBLIC_IP" ] && [ "$FORCE_UPDATE" = false ]; then
 	exit 0
 fi
 
-CLOUDFLARE_ID_FILE=$HOME/.ID::$CLOUDFLARE_RECORD_TYPE::$CLOUDFLARE_RECORD_NAME.ddns
+CLOUDFLARE_ID_FILE=$workDir/.ID::$CLOUDFLARE_RECORD_TYPE::$CLOUDFLARE_RECORD_NAME.ddns
 
 if [ -f $CLOUDFLARE_ID_FILE ] && [ $(wc -l $CLOUDFLARE_ID_FILE | cut -d " " -f 1) == 4 ] \
 	&& [ "$(sed -n '3,1p' "$CLOUDFLARE_ID_FILE")" == "$CLOUDFLARE_ZONE_NAME" ] \
