@@ -13,12 +13,6 @@ OUTBOUND_INTERFACE=
 FORCE_UPDATE=false
 
 
-getJsonValue() {
-	local json=$1
-	local path=$2
-	echo $json | jq -r $path
-}
-
 if [ -n "$BASH_SOURCE" ]; then
 	workDir=$(
 		cd $(dirname "$BASH_SOURCE")
@@ -140,8 +134,8 @@ else
         -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
         -H "Content-Type: application/json" | grep -Po '(?<="id":")[^"]*' | head -1 )
         CLOUDFLARE_RECORD_ID=$(curl $CURL_INTERFACE -s \
-        -X GET "https://api.cloudflare.com/client/v4/zones/$CLOUDFLARE_ZONE_ID/\
-        dns_records?name=$CLOUDFLARE_RECORD_NAME&type=$CLOUDFLARE_RECORD_TYPE" \
+        -X GET "https://api.cloudflare.com/client/v4/zones/$CLOUDFLARE_ZONE_ID/dns_records?name\
+	=$CLOUDFLARE_RECORD_NAME&type=$CLOUDFLARE_RECORD_TYPE" \
         -H "X-Auth-Email: $CLOUDFLARE_USER_MAIL" \
         -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
         -H "Content-Type: application/json"  | grep -Po '(?<="id":")[^"]*' | head -1 )
@@ -157,8 +151,8 @@ else
         -H "X-Auth-Key: $CLOUDFLARE_API_KEY" \
         -H "Content-Type: application/json" | grep -Po '(?<="id":")[^"]*' | head -1 )
         CLOUDFLARE_RECORD_ID=$(curl $CURL_INTERFACE -s \
-        -X GET "https://api.cloudflare.com/client/v4/zones/$CLOUDFLARE_ZONE_ID/\
-        dns_records?name=$CLOUDFLARE_RECORD_NAME&type=$CLOUDFLARE_RECORD_TYPE" \
+        -X GET "https://api.cloudflare.com/client/v4/zones/$CLOUDFLARE_ZONE_ID/dns_records?name\
+	=$CLOUDFLARE_RECORD_NAME&type=$CLOUDFLARE_RECORD_TYPE" \
         -H "X-Auth-Email: $CLOUDFLARE_USER_MAIL" \
         -H "X-Auth-Key: $CLOUDFLARE_API_KEY" \
         -H "Content-Type: application/json"  | grep -Po '(?<="id":")[^"]*' | head -1 )
