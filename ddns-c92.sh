@@ -48,18 +48,18 @@ while getopts k:n:t:u:z:i:fr: opts; do
 done
 
 if [ "$CLOUDFLARE_API_TOKEN" = "" ] && [ "$CLOUDFLARE_API_KEY" = "" ]; then
-	LOG_TIME=`date --rfc-3339 sec`
+	LOG_TIME=`date`
 	printf "$LOG_TIME: CLOUDFLARE_API_TOKEN or CLOUDFLARE_API_KEY is required.\n"
 	exit 2
 fi
 
 if [ "$CLOUDFLARE_API_TOKEN" != "" ] && [ "$CLOUDFLARE_API_KEY" != "" ]; then
-	LOG_TIME=`date --rfc-3339 sec`
+	LOG_TIME=`date`
 	printf "$LOG_TIME: CLOUDFLARE_API_TOKEN and CLOUDFLARE_API_KEY both set, CLOUDFLARE_API_KEY will be ignored.\n"
 fi
 
 if [ "$CLOUDFLARE_RECORD_NAME" = "" ]; then
-	LOG_TIME=`date --rfc-3339 sec`
+	LOG_TIME=`date`
 	printf "$LOG_TIME: CLOUDFLARE_RECORD_NAME is required.\n"
 	exit 2
 fi
@@ -72,19 +72,19 @@ if [ "$CLOUDFLARE_RECORD_TYPE" = "A" ]; then
 elif [ "$CLOUDFLARE_RECORD_TYPE" = "AAAA" ]; then
 	IP_VERSION="-6"
 else
-	LOG_TIME=`date --rfc-3339 sec`
+	LOG_TIME=`date`
 	printf "$LOG_TIME: Invalid record type, CLOUDFLARE_RECORD_TYPE can only be A or AAAA.\n"
 	exit 2
 fi
 
 if [ "$CLOUDFLARE_USER_MAIL" = "" ]; then
-	LOG_TIME=`date --rfc-3339 sec`
+	LOG_TIME=`date`
 	printf "$LOG_TIME: CLOUDFLARE_USER_MAIL is required.\n"
 	exit 2
 fi
 
 if [ "$CLOUDFLARE_ZONE_NAME" = "" ]; then
-	LOG_TIME=`date --rfc-3339 sec`
+	LOG_TIME=`date`
 	printf "$LOG_TIME: CLOUDFLARE_ZONE_NAME is required.\n"
 	exit 2
 fi
@@ -99,12 +99,12 @@ fi
 PUBLIC_IP=`curl $IP_VERSION $CURL_INTERFACE -s $PRIMARY_IP_API`
 # If primary service failed (empty result), try backup service;
 if [ -z "$PUBLIC_IP" ]; then
-	LOG_TIME=`date --rfc-3339 sec`
+	LOG_TIME=`date`
 	printf "$LOG_TIME: Primary IP service failed, trying backup service...\n"
 	PUBLIC_IP=`curl $IP_VERSION $CURL_INTERFACE -s $BACKUP_IP_API`
     
 	if [ -z "$PUBLIC_IP" ]; then
-		LOG_TIME=`date --rfc-3339 sec`
+		LOG_TIME=`date`
 		printf "$LOG_TIME: Failed to get public IP address from both services.\n"
 		exit 1
 	fi
@@ -119,7 +119,7 @@ else
 fi
 
 if [ "$PUBLIC_IP" = "$OLD_PUBLIC_IP" ] && [ "$FORCE_UPDATE" = false ]; then
-	LOG_TIME=`date --rfc-3339 sec`
+	LOG_TIME=`date`
 	printf "$LOG_TIME: Public IP not changed, you can use -f to update anyway.\n"
 	exit 0
 fi
@@ -177,7 +177,7 @@ else
 	fi
 fi
 
-LOG_TIME=`date --rfc-3339 sec`
+LOG_TIME=`date`
 printf "$LOG_TIME: Updating $CLOUDFLARE_RECORD_NAME to $PUBLIC_IP...\n"
 
 if [ "$CLOUDFLARE_API_TOKEN" != "" ]; then
@@ -195,11 +195,11 @@ else
 fi
 
 if [[ "$CLOUDFLARE_API_RESPONSE" != 200 ]]; then
-	LOG_TIME=`date --rfc-3339 sec`
+	LOG_TIME=`date`
 	printf "$LOG_TIME: Failed to update record.\n"
 	exit 1
 else
-	LOG_TIME=`date --rfc-3339 sec`
+	LOG_TIME=`date`
 	printf "$LOG_TIME: $CLOUDFLARE_RECORD_NAME successfully updated to $PUBLIC_IP.\n"
 	printf '%s' "$PUBLIC_IP" > "$PUBLIC_IP_FILE"
 fi
