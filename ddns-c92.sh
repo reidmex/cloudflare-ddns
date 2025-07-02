@@ -14,18 +14,17 @@ FORCE_UPDATE=false
 
 
 if [ -n "$BASH_SOURCE" ]; then
-        workDir=$(
+        WORKDIR=$(
                 cd $(dirname "$BASH_SOURCE")
                 pwd
         )
 else
-        workDir=$(
+        WORKDIR=$(
                 cd $(dirname $0)
                 pwd
         )
 fi
-echo "workDir: $workDir"
-cd $workDir
+cd $WORKDIR
 
 while getopts k:n:t:u:z:i:fr: opts; do
         case ${opts} in
@@ -103,7 +102,7 @@ if [ -z "$PUBLIC_IP" ]; then
         fi
 fi
 
-PUBLIC_IP_FILE=$workDir/.IP::$CLOUDFLARE_RECORD_TYPE::$CLOUDFLARE_RECORD_NAME.ddns
+PUBLIC_IP_FILE=$WORKDIR/.IP::$CLOUDFLARE_RECORD_TYPE::$CLOUDFLARE_RECORD_NAME.ddns
 
 if [ -f $PUBLIC_IP_FILE ]; then
         OLD_PUBLIC_IP=`cat $PUBLIC_IP_FILE`
@@ -117,7 +116,7 @@ if [ "$PUBLIC_IP" = "$OLD_PUBLIC_IP" ] && [ "$FORCE_UPDATE" = false ]; then
         exit 0
 fi
 
-CLOUDFLARE_ID_FILE=$workDir/.ID::$CLOUDFLARE_RECORD_TYPE::$CLOUDFLARE_RECORD_NAME.ddns
+CLOUDFLARE_ID_FILE=$WORKDIR/.ID::$CLOUDFLARE_RECORD_TYPE::$CLOUDFLARE_RECORD_NAME.ddns
 
 if [ -f $CLOUDFLARE_ID_FILE ] && [ $(wc -l $CLOUDFLARE_ID_FILE | cut -d " " -f 1) == 4 ] \
         && [ "$(sed -n '3,1p' "$CLOUDFLARE_ID_FILE")" == "$CLOUDFLARE_ZONE_NAME" ] \
