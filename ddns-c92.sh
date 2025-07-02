@@ -181,14 +181,14 @@ LOG_TIME=`date`
 printf "$LOG_TIME: Updating $CLOUDFLARE_RECORD_NAME to $PUBLIC_IP...\n"
 
 if [ "$CLOUDFLARE_API_TOKEN" != "" ]; then
-	CLOUDFLARE_API_RESPONSE=$(curl $CURL_INTERFACE $CURL_PROXY -o /dev/null -s -w "%{http_code}\n" \
+	CLOUDFLARE_API_RESPONSE=$(curl $CURL_INTERFACE -o /dev/null -s -w "%{http_code}\n" \
 		-X PUT "https://api.cloudflare.com/client/v4/zones/$CLOUDFLARE_ZONE_ID/dns_records/$CLOUDFLARE_RECORD_ID" \
 		-H "X-Auth-Email: $CLOUDFLARE_USER_MAIL" \
 		-H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
 		-H "Content-Type: application/json" \
 		--data "{\"type\":\"$CLOUDFLARE_RECORD_TYPE\",\"name\":\"$CLOUDFLARE_RECORD_NAME\",\"content\":\"$PUBLIC_IP\", \"ttl\":1}")
 else
-    CLOUDFLARE_API_RESPONSE=$(curl $CURL_INTERFACE $CURL_PROXY -o /dev/null -s -w "%{http_code}\n" \
+    CLOUDFLARE_API_RESPONSE=$(curl $CURL_INTERFACE -o /dev/null -s -w "%{http_code}\n" \
 		-X PUT "https://api.cloudflare.com/client/v4/zones/$CLOUDFLARE_ZONE_ID/dns_records/$CLOUDFLARE_RECORD_ID" \
 		-H "X-Auth-Email: $CLOUDFLARE_USER_MAIL" \
 		-H "X-Auth-Key: $CLOUDFLARE_API_KEY" \
