@@ -24,7 +24,6 @@ else
                 pwd
         )
 fi
-cd $WORKDIR
 
 while getopts k:n:t:u:z:i:fr: opts; do
         case ${opts} in
